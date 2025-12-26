@@ -1,6 +1,5 @@
 package com.example.demo.service.impl;
 
-import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.model.SkillCategory;
 import com.example.demo.repository.SkillCategoryRepository;
 import com.example.demo.service.SkillCategoryService;
@@ -18,32 +17,33 @@ public class SkillCategoryServiceImpl implements SkillCategoryService {
     }
 
     @Override
-    public SkillCategory createSkillCategory(SkillCategory category) {
+    public SkillCategory createCategory(SkillCategory category) {
         return skillCategoryRepository.save(category);
     }
 
     @Override
-    public SkillCategory updateSkillCategory(Long id, SkillCategory category) {
-        SkillCategory existing = getSkillCategoryById(id);
+    public SkillCategory updateCategory(Long id, SkillCategory category) {
+        SkillCategory existing = getCategoryById(id);
         existing.setCategoryName(category.getCategoryName());
         existing.setDescription(category.getDescription());
         return skillCategoryRepository.save(existing);
     }
 
     @Override
-    public SkillCategory getSkillCategoryById(Long id) {
+    public SkillCategory getCategoryById(Long id) {
         return skillCategoryRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("SkillCategory not found with id: " + id));
+                .orElseThrow(() -> new RuntimeException("SkillCategory not found"));
     }
 
     @Override
-    public List<SkillCategory> getAllSkillCategories() {
+    public List<SkillCategory> getAllCategories() {
         return skillCategoryRepository.findAll();
     }
 
     @Override
-    public void deleteSkillCategory(Long id) {
-        SkillCategory existing = getSkillCategoryById(id);
-        skillCategoryRepository.delete(existing);
+    public void deactivateCategory(Long id) {
+        SkillCategory existing = getCategoryById(id);
+        existing.setActive(false);
+        skillCategoryRepository.save(existing);
     }
 }

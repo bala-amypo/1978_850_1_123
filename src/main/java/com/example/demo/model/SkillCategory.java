@@ -2,7 +2,6 @@ package com.example.demo.model;
 
 import jakarta.persistence.*;
 import lombok.Data;
-import java.util.List;
 
 @Entity
 @Data
@@ -17,7 +16,4 @@ public class SkillCategory {
 
     private String description;
     private Boolean active = true;
-
-    @OneToMany(mappedBy = "skillCategory", cascade = CascadeType.ALL)
-    private List<Skill> skills;
 }

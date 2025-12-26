@@ -12,11 +12,9 @@ public class EmployeeSkill {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "employee_id")
     private Employee employee;
 
     @ManyToOne
-    @JoinColumn(name = "skill_id")
     private Skill skill;
 
     private String proficiencyLevel;

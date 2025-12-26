@@ -2,8 +2,7 @@ package com.example.demo.model;
 
 import jakarta.persistence.*;
 import lombok.Data;
-import java.time.Instant;
-import java.util.List;
+import java.time.LocalDateTime;
 
 @Entity
 @Data
@@ -22,19 +21,19 @@ public class Employee {
     private String jobTitle;
     private Boolean active = true;
 
-    private Instant createdAt;
-    private Instant updatedAt;
-
-    @OneToMany(mappedBy = "employee", cascade = CascadeType.ALL)
-    private List<EmployeeSkill> employeeSkills;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
 
     @PrePersist
     public void onCreate() {
-        this.createdAt = Instant.now();
+        this.createdAt = LocalDateTime.now();
+        if (this.active == null) {
+            this.active = true;
+        }
     }
 
     @PreUpdate
     public void onUpdate() {
-        this.updatedAt = Instant.now();
+        this.updatedAt = LocalDateTime.now();
     }
 }

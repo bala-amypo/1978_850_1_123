@@ -4,9 +4,9 @@ import com.example.demo.model.SkillCategory;
 import java.util.List;
 
 public interface SkillCategoryService {
-    SkillCategory createSkillCategory(SkillCategory category);
-    SkillCategory updateSkillCategory(Long id, SkillCategory category);
-    SkillCategory getSkillCategoryById(Long id);
-    List<SkillCategory> getAllSkillCategories();
-    void deleteSkillCategory(Long id);
+    SkillCategory createCategory(SkillCategory category);
+    SkillCategory updateCategory(Long id, SkillCategory category);
+    SkillCategory getCategoryById(Long id);
+    List<SkillCategory> getAllCategories();
+    void deactivateCategory(Long id);
 }

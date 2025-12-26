@@ -1,6 +1,5 @@
 package com.example.demo.service.impl;
 
-import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.model.Skill;
 import com.example.demo.repository.SkillRepository;
 import com.example.demo.service.SkillService;
@@ -26,7 +25,7 @@ public class SkillServiceImpl implements SkillService {
     public Skill updateSkill(Long id, Skill skill) {
         Skill existing = getSkillById(id);
         existing.setName(skill.getName());
-        existing.setSkillCategory(skill.getSkillCategory());
+        existing.setCategory(skill.getCategory());
         existing.setDescription(skill.getDescription());
         return skillRepository.save(existing);
     }
@@ -34,7 +33,7 @@ public class SkillServiceImpl implements SkillService {
     @Override
     public Skill getSkillById(Long id) {
         return skillRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Skill not found with id: " + id));
+                .orElseThrow(() -> new RuntimeException("Skill not found"));
     }
 
     @Override
@@ -43,8 +42,9 @@ public class SkillServiceImpl implements SkillService {
     }
 
     @Override
-    public void deleteSkill(Long id) {
+    public void deactivateSkill(Long id) {
         Skill existing = getSkillById(id);
-        skillRepository.delete(existing);
+        existing.setActive(false);
+        skillRepository.save(existing);
     }
 }

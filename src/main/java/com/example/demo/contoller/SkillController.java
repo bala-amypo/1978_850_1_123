@@ -1,44 +1,44 @@
 package com.example.demo.controller;
 
-import com.example.demo.model.SkillCategory;
-import com.example.demo.service.SkillCategoryService;
+import com.example.demo.model.Skill;
+import com.example.demo.service.SkillService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/skill-categories")
-public class SkillCategoryController {
+@RequestMapping("/api/skills")
+public class SkillController {
 
-    private final SkillCategoryService service;
+    private final SkillService service;
 
-    public SkillCategoryController(SkillCategoryService service) {
+    public SkillController(SkillService service) {
         this.service = service;
     }
 
     @PostMapping
-    public ResponseEntity<SkillCategory> create(@RequestBody SkillCategory skillCategory) {
-        return ResponseEntity.ok(service.createSkillCategory(skillCategory));
+    public ResponseEntity<Skill> create(@RequestBody Skill skill) {
+        return ResponseEntity.ok(service.createSkill(skill));
     }
 
     @GetMapping
-    public ResponseEntity<List<SkillCategory>> getAll() {
-        return ResponseEntity.ok(service.getAllSkillCategories());
+    public ResponseEntity<List<Skill>> getAll() {
+        return ResponseEntity.ok(service.getAllSkills());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<SkillCategory> getById(@PathVariable Long id) {
-        return ResponseEntity.ok(service.getSkillCategoryById(id));
+    public ResponseEntity<Skill> getById(@PathVariable Long id) {
+        return ResponseEntity.ok(service.getSkillById(id));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<SkillCategory> update(@PathVariable Long id, @RequestBody SkillCategory skillCategory) {
-        return ResponseEntity.ok(service.updateSkillCategory(id, skillCategory));
+    public ResponseEntity<Skill> update(@PathVariable Long id, @RequestBody Skill skill) {
+        return ResponseEntity.ok(service.updateSkill(id, skill));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
-        service.deleteSkillCategory(id);
+        service.deleteSkill(id);
         return ResponseEntity.ok().build();
     }
 }

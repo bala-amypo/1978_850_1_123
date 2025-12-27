@@ -1,13 +1,18 @@
-package com.example.demo.util;
+package com.example.demo.servlet;
 
-import java.util.Set;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
-public class ProficiencyValidator {
+import java.io.IOException;
 
-    private static final Set<String> LEVELS =
-            Set.of("Beginner", "Intermediate", "Advanced");
+@WebServlet(name = "helloServlet", urlPatterns = "/hello-servlet")
+public class HelloServlet extends HttpServlet {
 
-    public static boolean isValid(String level) {
-        return LEVELS.contains(level);
+    @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp)
+            throws IOException {
+        resp.getWriter().write("Hello from simple servlet");
     }
 }

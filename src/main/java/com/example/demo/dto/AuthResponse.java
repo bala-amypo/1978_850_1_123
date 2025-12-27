@@ -1,43 +1,24 @@
 package com.example.demo.dto;
 
-public class AuthRegisterResponse {
+public class AuthResponse {
 
-    private Long userId;
-    private String email;
-    private String role;
+    private String token;
     private String message;
 
-    public AuthRegisterResponse() {}
+    public AuthResponse() {
+    }
 
-    public AuthRegisterResponse(Long userId, String email, String role, String message) {
-        this.userId = userId;
-        this.email = email;
-        this.role = role;
+    public AuthResponse(String token, String message) {
+        this.token = token;
         this.message = message;
     }
 
-    public Long getUserId() {
-        return userId;
+    public String getToken() {
+        return token;
     }
 
-    public void setUserId(Long userId) {
-        this.userId = userId;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getRole() {
-        return role;
-    }
-
-    public void setRole(String role) {
-        this.role = role;
+    public void setToken(String token) {
+        this.token = token;
     }
 
     public String getMessage() {

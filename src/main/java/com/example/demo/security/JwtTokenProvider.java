@@ -1,26 +1,27 @@
 package com.example.demo.security;
 
-import io.jsonwebtoken.*;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
-import org.springframework.stereotype.Component;
-
-import javax.crypto.SecretKey;
+import io.jsonwebtoken.io.Decoders;
+import io.jsonwebtoken.Claims;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Function;
+import javax.crypto.SecretKey;
 
-@Component
 public class JwtTokenProvider {
-    private static final String SECRET_KEY = "your-very-secure-secret-key-that-is-at-least-256-bits-long-for-hs512";
-    private static final long EXPIRATION_TIME = 86400000; // 24 hours
-    private static final SecretKey key = Keys.hmacShaKeyFor(SECRET_KEY.getBytes());
+    private static final String SECRET = "404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970337336763979244226452948404D635166";
+    private static final long EXPIRATION_TIME = 86400000;
+    private final SecretKey key = Keys.hmacShaKeyFor(Decoders.BASE64.decode(SECRET));
 
     public String generateToken(Long userId, String email, String role) {
         Map<String, Object> claims = new HashMap<>();
         claims.put("userId", userId);
         claims.put("email", email);
         claims.put("role", role.toUpperCase());
-
+        
         return Jwts.builder()
                 .claims(claims)
                 .issuedAt(new Date())
@@ -31,7 +32,7 @@ public class JwtTokenProvider {
 
     public boolean validateToken(String token) {
         try {
-            getClaims(token);
+            Jwts.parser().verifyWith(key).build().parseSignedClaims(token);
             return true;
         } catch (Exception e) {
             return false;
@@ -39,11 +40,7 @@ public class JwtTokenProvider {
     }
 
     public Claims getClaims(String token) {
-        return Jwts.parser()
-                .verifyWith(key)
-                .build()
-                .parseClaimsJws(token)
-                .getPayload();
+        return Jwts.parser().verifyWith(key).build().parseSignedClaims(token).getPayload();
     }
 
     public String getEmailFromToken(String token) {

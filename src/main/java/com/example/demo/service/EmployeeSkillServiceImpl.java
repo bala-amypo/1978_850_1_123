@@ -1,74 +1,52 @@
 package com.example.demo.service.impl;
 
-import com.example.demo.model.EmployeeSkill;
+import com.example.demo.model.Employee;
 import com.example.demo.repository.EmployeeRepository;
-import com.example.demo.repository.EmployeeSkillRepository;
-import com.example.demo.repository.SkillRepository;
-import com.example.demo.service.EmployeeSkillService;
-import com.example.demo.util.ProficiencyValidator;
+import com.example.demo.service.EmployeeService;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 
 @Service
-public class EmployeeSkillServiceImpl implements EmployeeSkillService {
+public class EmployeeServiceImpl implements EmployeeService {
 
-    private final EmployeeSkillRepository employeeSkillRepository;
-    private final EmployeeRepository employeeRepository;
-    private final SkillRepository skillRepository;
+    private final EmployeeRepository repo;
 
-    public EmployeeSkillServiceImpl(EmployeeSkillRepository employeeSkillRepository,
-                                    EmployeeRepository employeeRepository,
-                                    SkillRepository skillRepository) {
-        this.employeeSkillRepository = employeeSkillRepository;
-        this.employeeRepository = employeeRepository;
-        this.skillRepository = skillRepository;
+    public EmployeeServiceImpl(EmployeeRepository repo) {
+        this.repo = repo;
     }
 
     @Override
-    public EmployeeSkill createEmployeeSkill(EmployeeSkill mapping) {
-        if (!ProficiencyValidator.isValid(mapping.getProficiencyLevel())) {
-            throw new IllegalArgumentException("Invalid proficiency");
+    public Employee createEmployee(Employee emp) {
+        // Validation: email must not be null or empty
+        if (emp.getEmail() == null || emp.getEmail().trim().isEmpty()) {
+            throw new IllegalArgumentException("Email must not be empty");
         }
-        if (mapping.getYearsOfExperience() < 0) {
-            throw new IllegalArgumentException("Experience years must be >= 0");
-        }
-        if (!employeeRepository.findById(mapping.getEmployee().getId()).orElseThrow()
-                .getActive()) {
-            throw new IllegalArgumentException("inactive employee");
-        }
-        if (!skillRepository.findById(mapping.getSkill().getId()).orElseThrow()
-                .getActive()) {
-            throw new IllegalArgumentException("inactive skill");
-        }
-
-        return employeeSkillRepository.save(mapping);
+        return repo.save(emp);
     }
 
     @Override
-    public EmployeeSkill updateEmployeeSkill(Long id, EmployeeSkill mapping) {
-        EmployeeSkill existing = employeeSkillRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("EmployeeSkill not found"));
-        existing.setProficiencyLevel(mapping.getProficiencyLevel());
-        existing.setYearsOfExperience(mapping.getYearsOfExperience());
-        return employeeSkillRepository.save(existing);
+    public Employee updateEmployee(Long id, Employee employee) {
+        Employee existing = getEmployeeById(id);
+        existing.setFullName(employee.getFullName());
+        existing.setEmail(employee.getEmail());
+        return repo.save(existing);
     }
 
     @Override
-    public List<EmployeeSkill> getSkillsForEmployee(Long employeeId) {
-        return employeeSkillRepository.findByEmployeeIdAndActiveTrue(employeeId);
+    public Employee getEmployeeById(Long id) {
+        return repo.findById(id)
+                  .orElseThrow(() -> new IllegalArgumentException("Employee not found"));
     }
 
     @Override
-    public List<EmployeeSkill> getEmployeesBySkill(Long skillId) {
-        return employeeSkillRepository.findBySkillIdAndActiveTrue(skillId);
+    public List<Employee> getAllEmployees() {
+        return repo.findAll();
     }
 
     @Override
-    public void deactivateEmployeeSkill(Long id) {
-        EmployeeSkill existing = employeeSkillRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("EmployeeSkill not found"));
-        existing.setActive(false);
-        employeeSkillRepository.save(existing);
+    public void deactivateEmployee(Long id) {
+        Employee e = getEmployeeById(id);
+        e.setActive(false);
+        repo.save(e);
     }
 }

@@ -21,7 +21,7 @@ public class SwaggerConfig {
         return new OpenAPI()
                 .info(new Info().title("Employee Skills Matrix API").version("1.0"))
                 .servers(List.of(
-                        new Server().url("https://9050.408procr.amypo.ai/")
+                        new Server().url("https://9279.408procr.amypo.ai/")
                 ))
                 
                 .addSecurityItem(new SecurityRequirement().addList(securitySchemeName))

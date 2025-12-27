@@ -5,8 +5,8 @@ import com.example.demo.model.SearchQueryRecord;
 import java.util.List;
 
 public interface SearchQueryService {
-    SearchQueryRecord saveQuery(SearchQueryRecord query);
-    List<SearchQueryRecord> getQueriesForUser(Long userId);
+    List<Employee> searchEmployeesBySkills(List<String> skillNames, Long searcherId);
     SearchQueryRecord getQueryById(Long id);
-    List<Employee> searchEmployeesBySkills(List<String> skills, Long userId);
+    List<SearchQueryRecord> getQueriesForUser(Long searcherId);
+    void saveQuery(SearchQueryRecord record);
 }

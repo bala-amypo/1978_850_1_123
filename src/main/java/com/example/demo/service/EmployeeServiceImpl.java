@@ -8,36 +8,41 @@ import java.util.List;
 
 public class EmployeeServiceImpl implements EmployeeService {
 
-    private final EmployeeRepository repo;
+    private final EmployeeRepository repository;
 
-    public EmployeeServiceImpl(EmployeeRepository repo) {
-        this.repo = repo;
+    public EmployeeServiceImpl(EmployeeRepository repository) {
+        this.repository = repository;
     }
 
-    public Employee createEmployee(Employee e) {
-        return repo.save(e);
+    @Override
+    public Employee createEmployee(Employee employee) {
+        return repository.save(employee);
     }
 
-    public Employee updateEmployee(Long id, Employee update) {
-        Employee e = repo.findById(id)
+    @Override
+    public Employee updateEmployee(Long id, Employee employee) {
+        Employee existing = repository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Employee not found"));
-        e.setFullName(update.getFullName());
-        e.setEmail(update.getEmail());
-        return repo.save(e);
+        existing.setFullName(employee.getFullName());
+        existing.setEmail(employee.getEmail());
+        return repository.save(existing);
     }
 
+    @Override
     public Employee getEmployeeById(Long id) {
-        return repo.findById(id)
+        return repository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Employee not found"));
     }
 
+    @Override
     public List<Employee> getAllEmployees() {
-        return repo.findAll();
+        return repository.findAll();
     }
 
+    @Override
     public void deactivateEmployee(Long id) {
-        Employee e = getEmployeeById(id);
-        e.setActive(false);
-        repo.save(e);
+        Employee emp = getEmployeeById(id);
+        emp.setActive(false);
+        repository.save(emp);
     }
 }

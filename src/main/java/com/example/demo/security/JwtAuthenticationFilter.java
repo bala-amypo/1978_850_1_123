@@ -23,32 +23,39 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     }
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+    protected void doFilterInternal(HttpServletRequest request,
+                                    HttpServletResponse response,
+                                    FilterChain filterChain)
             throws ServletException, IOException {
 
-        String token = parseJwt(request);
+        try {
+            String token = parseJwt(request);
 
-        if (token != null && tokenProvider.validateToken(token)) {
-            String username = tokenProvider.getUsernameFromJwt(token);
+            if (token != null && tokenProvider.validateToken(token)) {
+                String username = tokenProvider.getUsernameFromJwt(token);
 
-            UsernamePasswordAuthenticationToken authentication =
-                    new UsernamePasswordAuthenticationToken(username, null, Collections.emptyList());
+                UsernamePasswordAuthenticationToken authentication =
+                        new UsernamePasswordAuthenticationToken(username, null, Collections.emptyList());
 
-            authentication.setDetails(
-                    new WebAuthenticationDetailsSource().buildDetails(request)
-            );
+                authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
-            SecurityContextHolder.getContext().setAuthentication(authentication);
+                SecurityContextHolder.getContext().setAuthentication(authentication);
+            }
+        } catch (Exception ex) {
+            // Optional: log the error
+            logger.error("Cannot set user authentication: {}", ex.getMessage());
         }
 
         filterChain.doFilter(request, response);
     }
 
     private String parseJwt(HttpServletRequest request) {
-        String header = request.getHeader("Authorization");
-        if (header != null && header.startsWith("Bearer ")) {
-            return header.substring(7);
+        String headerAuth = request.getHeader("Authorization");
+
+        if (headerAuth != null && headerAuth.startsWith("Bearer ")) {
+            return headerAuth.substring(7);
         }
+
         return null;
     }
 }

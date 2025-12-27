@@ -1,20 +1,14 @@
 package com.example.demo.controller;
 
-import com.example.demo.dto.EmployeeSearchRequest;
+import com.example.demo.model.Employee;
 import com.example.demo.model.SearchQueryRecord;
 import com.example.demo.service.SearchQueryService;
-
-import io.swagger.v3.oas.annotations.tags.Tag;
-import io.swagger.v3.oas.annotations.security.SecurityRequirement;
-
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 
-@Tag(name = "Search")
 @RestController
-@org.springframework.web.bind.annotation.RequestMapping("/api/search")
-@SecurityRequirement(name = "bearerAuth")
+@RequestMapping("/search")
 public class SearchQueryController {
 
     private final SearchQueryService service;
@@ -24,22 +18,19 @@ public class SearchQueryController {
     }
 
     @PostMapping("/employees")
-    public ResponseEntity<List<?>> searchEmployees(
-            @RequestBody EmployeeSearchRequest req
-    ) {
-        return ResponseEntity.ok(service.searchEmployeesBySkills(
-                req.getSkills(), req.getUserId()));
+    public List<Employee> searchEmployees(
+            @RequestParam List<String> skills,
+            @RequestParam Long userId) {
+        return service.searchEmployeesBySkills(skills, userId);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<SearchQueryRecord> getQuery(@PathVariable Long id) {
-        return ResponseEntity.ok(service.getQueryById(id));
+    @GetMapping("/queries/{id}")
+    public SearchQueryRecord getQuery(@PathVariable Long id) {
+        return service.getQueryById(id);
     }
 
-    @GetMapping("/user/{userId}")
-    public ResponseEntity<List<SearchQueryRecord>> getUserQueries(
-            @PathVariable Long userId
-    ) {
-        return ResponseEntity.ok(service.getQueriesForUser(userId));
+    @GetMapping("/queries/user/{userId}")
+    public List<SearchQueryRecord> getQueriesForUser(@PathVariable Long userId) {
+        return service.getQueriesForUser(userId);
     }
 }

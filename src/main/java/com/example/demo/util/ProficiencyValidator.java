@@ -1,16 +1,13 @@
 package com.example.demo.util;
 
-import java.util.Arrays;
-import java.util.List;
+import java.util.Set;
 
 public class ProficiencyValidator {
 
-    private static final List<String> VALID_PROFICIENCIES = Arrays.asList(
-            "Beginner", "Intermediate", "Advanced", "Expert"
-    );
+    private static final Set<String> LEVELS =
+            Set.of("Beginner", "Intermediate", "Advanced");
 
-    public static boolean isValid(String proficiency) {
-        return VALID_PROFICIENCIES.contains(proficiency);
+    public static boolean isValid(String level) {
+        return LEVELS.contains(level);
     }
 }
-

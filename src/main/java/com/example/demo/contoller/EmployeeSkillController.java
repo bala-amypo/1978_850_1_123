@@ -2,18 +2,12 @@ package com.example.demo.controller;
 
 import com.example.demo.model.EmployeeSkill;
 import com.example.demo.service.EmployeeSkillService;
-
-import io.swagger.v3.oas.annotations.tags.Tag;
-import io.swagger.v3.oas.annotations.security.SecurityRequirement;
-
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 
-@Tag(name = "EmployeeSkill")
 @RestController
-@org.springframework.web.bind.annotation.RequestMapping("/api/employee-skills")
-@SecurityRequirement(name = "bearerAuth")
+@RequestMapping("/employee-skills")
 public class EmployeeSkillController {
 
     private final EmployeeSkillService service;
@@ -23,35 +17,22 @@ public class EmployeeSkillController {
     }
 
     @PostMapping
-    public ResponseEntity<EmployeeSkill> create(
-            @RequestBody EmployeeSkill mapping
-    ) {
-        return ResponseEntity.ok(service.createEmployeeSkill(mapping));
+    public EmployeeSkill create(@RequestBody EmployeeSkill es) {
+        return service.createEmployeeSkill(es);
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<EmployeeSkill> update(@PathVariable Long id,
-                                                @RequestBody EmployeeSkill mapping) {
-        return ResponseEntity.ok(service.updateEmployeeSkill(id, mapping));
+    @DeleteMapping("/{id}")
+    public void deactivate(@PathVariable Long id) {
+        service.deactivateEmployeeSkill(id);
     }
 
     @GetMapping("/employee/{employeeId}")
-    public ResponseEntity<List<EmployeeSkill>> getForEmployee(
-            @PathVariable Long employeeId
-    ) {
-        return ResponseEntity.ok(service.getSkillsForEmployee(employeeId));
+    public List<EmployeeSkill> getByEmployee(@PathVariable Long employeeId) {
+        return service.getSkillsForEmployee(employeeId);
     }
 
     @GetMapping("/skill/{skillId}")
-    public ResponseEntity<List<EmployeeSkill>> getForSkill(
-            @PathVariable Long skillId
-    ) {
-        return ResponseEntity.ok(service.getEmployeesBySkill(skillId));
-    }
-
-    @PutMapping("/{id}/deactivate")
-    public ResponseEntity<Void> deactivate(@PathVariable Long id) {
-        service.deactivateEmployeeSkill(id);
-        return ResponseEntity.ok().build();
+    public List<EmployeeSkill> getBySkill(@PathVariable Long skillId) {
+        return service.getEmployeesBySkill(skillId);
     }
 }

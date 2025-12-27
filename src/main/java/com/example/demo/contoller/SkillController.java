@@ -2,18 +2,10 @@ package com.example.demo.controller;
 
 import com.example.demo.model.Skill;
 import com.example.demo.service.SkillService;
-
-import io.swagger.v3.oas.annotations.tags.Tag;
-import io.swagger.v3.oas.annotations.security.SecurityRequirement;
-
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import java.util.List;
 
-@Tag(name = "Skill")
 @RestController
-@org.springframework.web.bind.annotation.RequestMapping("/api/skills")
-@SecurityRequirement(name = "bearerAuth")
+@RequestMapping("/skills")
 public class SkillController {
 
     private final SkillService service;
@@ -23,29 +15,17 @@ public class SkillController {
     }
 
     @PostMapping
-    public ResponseEntity<Skill> create(@RequestBody Skill skill) {
-        return ResponseEntity.ok(service.createSkill(skill));
+    public Skill create(@RequestBody Skill s) {
+        return service.createSkill(s);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Skill> update(@PathVariable Long id,
-                                        @RequestBody Skill skill) {
-        return ResponseEntity.ok(service.updateSkill(id, skill));
+    public Skill update(@PathVariable Long id, @RequestBody Skill s) {
+        return service.updateSkill(id, s);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<Skill> get(@PathVariable Long id) {
-        return ResponseEntity.ok(service.getSkillById(id));
-    }
-
-    @GetMapping
-    public ResponseEntity<List<Skill>> list() {
-        return ResponseEntity.ok(service.getAllSkills());
-    }
-
-    @PutMapping("/{id}/deactivate")
-    public ResponseEntity<Void> deactivate(@PathVariable Long id) {
+    @DeleteMapping("/{id}")
+    public void deactivate(@PathVariable Long id) {
         service.deactivateSkill(id);
-        return ResponseEntity.ok().build();
     }
 }

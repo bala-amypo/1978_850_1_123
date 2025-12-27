@@ -1,14 +1,14 @@
 package com.example.demo.controller;
 
+import com.example.demo.dto.EmployeeSearchRequest;
 import com.example.demo.model.Employee;
 import com.example.demo.model.SearchQueryRecord;
 import com.example.demo.service.SearchQueryService;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 
 @RestController
-@RequestMapping("/search")
+@RequestMapping("/api/search")
 public class SearchQueryController {
 
     private final SearchQueryService service;
@@ -18,19 +18,20 @@ public class SearchQueryController {
     }
 
     @PostMapping("/employees")
-    public List<Employee> searchEmployees(
-            @RequestParam List<String> skills,
-            @RequestParam Long userId) {
-        return service.searchEmployeesBySkills(skills, userId);
+    public List<Employee> searchEmployees(@RequestBody EmployeeSearchRequest request) {
+      
+        return service.searchEmployeesBySkills(request.getSkills(), 1L);
     }
 
-    @GetMapping("/queries/{id}")
-    public SearchQueryRecord getQuery(@PathVariable Long id) {
+    @GetMapping("/{id}")
+    public SearchQueryRecord getById(@PathVariable Long id) {
+        
         return service.getQueryById(id);
     }
 
-    @GetMapping("/queries/user/{userId}")
-    public List<SearchQueryRecord> getQueriesForUser(@PathVariable Long userId) {
+    @GetMapping("/user/{userId}")
+    public List<SearchQueryRecord> getByUserId(@PathVariable Long userId) {
+        
         return service.getQueriesForUser(userId);
     }
 }

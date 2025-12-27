@@ -12,24 +12,25 @@ import java.util.Date;
 public class JwtTokenProvider {
 
     private static final String SECRET =
-            "mysecretkeymysecretkeymysecretkeymysecretkey";
-
+            "mysecretkeymysecretkeymysecretkeymysecretkey"; // 256-bit
     private static final long EXPIRATION = 86400000; // 1 day
 
     private Key getSigningKey() {
         return Keys.hmacShaKeyFor(SECRET.getBytes());
     }
 
-    public String generateToken(String username) {
+    // ✅ MUST MATCH CONTROLLER CALL (id, email, role)
+    public String generateToken(Long userId, String email, String role) {
         return Jwts.builder()
-                .setSubject(username)
+                .setSubject(email)
+                .claim("userId", userId)
+                .claim("role", role)
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION))
                 .signWith(getSigningKey())
                 .compact();
     }
 
-    // ✅ THIS METHOD WAS MISSING
     public String getUsernameFromJwt(String token) {
         Claims claims = Jwts.parserBuilder()
                 .setSigningKey(getSigningKey())

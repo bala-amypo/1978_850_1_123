@@ -4,6 +4,7 @@ import com.example.demo.model.Employee;
 import com.example.demo.repository.EmployeeRepository;
 import com.example.demo.service.EmployeeService;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
 
 @Service
@@ -16,25 +17,26 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
-public Employee createEmployee(Employee emp) {
-    if (emp.getEmail() == null || emp.getEmail().isEmpty()) {
-        throw new IllegalArgumentException("Email must not be empty");
+    public Employee createEmployee(Employee emp) {
+        // Validation: email must not be null or empty
+        if (emp.getEmail() == null || emp.getEmail().trim().isEmpty()) {
+            throw new IllegalArgumentException("Email must not be empty");
+        }
+        return repo.save(emp);
     }
-    return employeeRepository.save(emp);
-}
-
 
     @Override
     public Employee updateEmployee(Long id, Employee employee) {
-        Employee ex = getEmployeeById(id);
-        ex.setFullName(employee.getFullName());
-        ex.setEmail(employee.getEmail());
-        return repo.save(ex);
+        Employee existing = getEmployeeById(id);
+        existing.setFullName(employee.getFullName());
+        existing.setEmail(employee.getEmail());
+        return repo.save(existing);
     }
 
     @Override
     public Employee getEmployeeById(Long id) {
-        return repo.findById(id).orElseThrow(() -> new RuntimeException("Employee not found"));
+        return repo.findById(id)
+                   .orElseThrow(() -> new IllegalArgumentException("Employee not found"));
     }
 
     @Override

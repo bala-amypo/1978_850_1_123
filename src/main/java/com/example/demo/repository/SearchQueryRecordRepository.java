@@ -5,5 +5,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface SearchQueryRecordRepository extends JpaRepository<SearchQueryRecord, Long> {
-    List<SearchQueryRecord> findBySearcherId(Long id);
+    List<SearchQueryRecord> findBySearcherId(Long searcherId);
 }

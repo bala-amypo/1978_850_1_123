@@ -1,50 +1,50 @@
 package com.example.demo.service.impl;
 
 import com.example.demo.model.Employee;
-import com.example.demo.model.EmployeeSkill;
-import com.example.demo.model.Skill;
 import com.example.demo.repository.EmployeeRepository;
-import com.example.demo.repository.EmployeeSkillRepository;
-import com.example.demo.repository.SkillRepository;
-import com.example.demo.service.EmployeeSkillService;
-import com.example.demo.util.ProficiencyValidator;
+import com.example.demo.service.EmployeeService;
 
 import java.util.List;
 
-public class EmployeeSkillServiceImpl implements EmployeeSkillService {
+public class EmployeeServiceImpl implements EmployeeService {
 
-    private final EmployeeSkillRepository employeeSkillRepository;
-    private final EmployeeRepository employeeRepository;
-    private final SkillRepository skillRepository;
+    private final EmployeeRepository repository;
 
-    public EmployeeSkillServiceImpl(EmployeeSkillRepository employeeSkillRepository,
-                                    EmployeeRepository employeeRepository,
-                                    SkillRepository skillRepository) {
-        this.employeeSkillRepository = employeeSkillRepository;
-        this.employeeRepository = employeeRepository;
-        this.skillRepository = skillRepository;
+    public EmployeeServiceImpl(EmployeeRepository repository) {
+        this.repository = repository;
     }
 
     @Override
-    public EmployeeSkill createEmployeeSkill(EmployeeSkill es) {
+    public Employee createEmployee(Employee employee) {
+        return repository.save(employee);
+    }
 
-        if (es.getYearsOfExperience() < 0) {
-            throw new IllegalArgumentException("Experience years cannot be negative");
-        }
+    @Override
+    public Employee updateEmployee(Long id, Employee employee) {
+        Employee existing = repository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Employee not found"));
 
-        if (!ProficiencyValidator.isValid(es.getProficiencyLevel())) {
-            throw new IllegalArgumentException("Invalid proficiency");
-        }
+        existing.setFullName(employee.getFullName());
+        existing.setEmail(employee.getEmail());
 
-        Employee emp = employeeRepository.findById(es.getEmployee().getId())
-                .orElseThrow(() -> new IllegalArgumentException("Employee not found"));
+        return repository.save(existing);
+    }
 
-        if (!emp.getActive()) {
-            throw new IllegalArgumentException("inactive employee");
-        }
+    @Override
+    public Employee getEmployeeById(Long id) {
+        return repository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Employee not found"));
+    }
 
-        Skill skill = skillRepository.findById(es.getSkill().getId())
-                .orElseThrow(() -> new IllegalArgumentException("Skill not found"));
+    @Override
+    public List<Employee> getAllEmployees() {
+        return repository.findAll();
+    }
 
-        if (!skill.getActive()) {
-            throw n
+    @Override
+    public void deactivateEmployee(Long id) {
+        Employee emp = getEmployeeById(id);
+        emp.setActive(false);
+        repository.save(emp);
+    }
+}

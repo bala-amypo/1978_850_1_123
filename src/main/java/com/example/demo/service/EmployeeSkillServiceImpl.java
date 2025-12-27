@@ -38,13 +38,37 @@ public class EmployeeSkillServiceImpl implements EmployeeSkillService {
 
         Employee emp = employeeRepository.findById(es.getEmployee().getId())
                 .orElseThrow(() -> new IllegalArgumentException("Employee not found"));
-        if (!emp.getActive()) throw new IllegalArgumentException("inactive employee");
+
+        if (!emp.getActive()) {
+            throw new IllegalArgumentException("inactive employee");
+        }
 
         Skill skill = skillRepository.findById(es.getSkill().getId())
                 .orElseThrow(() -> new IllegalArgumentException("Skill not found"));
-        if (!skill.getActive()) throw new IllegalArgumentException("inactive skill");
+
+        if (!skill.getActive()) {
+            throw new IllegalArgumentException("inactive skill");
+        }
 
         return employeeSkillRepository.save(es);
     }
 
-    @Overrid
+    @Override
+    public void deactivateEmployeeSkill(Long id) {
+        EmployeeSkill es = employeeSkillRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Mapping not found"));
+
+        es.setActive(false);
+        employeeSkillRepository.save(es);
+    }
+
+    @Override
+    public List<EmployeeSkill> getSkillsForEmployee(Long employeeId) {
+        return employeeSkillRepository.findByEmployeeIdAndActiveTrue(employeeId);
+    }
+
+    @Override
+    public List<EmployeeSkill> getEmployeesBySkill(Long skillId) {
+        return employeeSkillRepository.findBySkillIdAndActiveTrue(skillId);
+    }
+}

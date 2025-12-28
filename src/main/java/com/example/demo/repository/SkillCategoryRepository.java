@@ -1,9 +1,10 @@
 package com.example.demo.repository;
 
-import com.example.demo.model.SearchQueryRecord;
 import org.springframework.data.jpa.repository.JpaRepository;
-import java.util.List;
+import org.springframework.stereotype.Repository;
+import com.example.demo.model.SkillCategory;
 
-public interface SearchQueryRecordRepository extends JpaRepository<SearchQueryRecord, Long> {
-    List<SearchQueryRecord> findBySearcherId(Long searcherId);
+@Repository
+public interface SkillCategoryRepository extends JpaRepository<SkillCategory, Long> {
+    // Add custom query methods here if needed
 }
